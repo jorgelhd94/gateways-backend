@@ -1,26 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { IGateway } from 'src/gateways/interfaces/gateway.interface';
+import { GatewayModel } from './../gateways/schemas/gateway.schema';
 import { CreateDeviceDto } from './dto/create-device.dto';
-import { UpdateDeviceDto } from './dto/update-device.dto';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class DevicesService {
-  create(createDeviceDto: CreateDeviceDto) {
-    return 'This action adds a new device';
+  async addDevice(
+    gatewayId: string,
+    device: CreateDeviceDto,
+  ): Promise<IGateway> {
+    const gateway = await GatewayModel.findById(gatewayId);
+
+    if (!gateway) {
+      throw new Error('Gateway not found');
+    }
+
+    if (gateway.devices.length >= 10) {
+      throw new Error('Exceeded the maximum number of allowed devices');
+    }
+
+    gateway.devices.push(device);
+    return await gateway.save();
   }
 
-  findAll() {
-    return `This action returns all devices`;
-  }
+  async removeDevice(gatewayId: string, deviceId: string): Promise<IGateway> {
+    const gateway = await GatewayModel.findById(gatewayId);
 
-  findOne(id: number) {
-    return `This action returns a #${id} device`;
-  }
+    if (!gateway) {
+      throw new Error('Gateway not found');
+    }
 
-  update(id: number, updateDeviceDto: UpdateDeviceDto) {
-    return `This action updates a #${id} device`;
-  }
+    const deviceIndex = gateway.devices.findIndex(
+      (device) => device.id === deviceId,
+    );
 
-  remove(id: number) {
-    return `This action removes a #${id} device`;
+    if (deviceIndex === -1) {
+      throw new Error('Device not found');
+    }
+
+    gateway.devices.splice(deviceIndex, 1);
+    return await gateway.save();
   }
 }
