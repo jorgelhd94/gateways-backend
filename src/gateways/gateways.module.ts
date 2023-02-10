@@ -7,7 +7,7 @@ import { GatewayModel } from './schemas/gateway.schema';
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: 'Gateway', schema: GatewayModel.schema },
+      { name: GatewayModel.name, schema: GatewayModel.schema },
     ]),
   ],
   controllers: [GatewaysController],

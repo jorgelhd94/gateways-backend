@@ -1,6 +1,8 @@
-import { Schema, model } from 'mongoose';
+import { HydratedDocument, Schema, model } from 'mongoose';
 import { DeviceModel } from 'src/devices/schemas/device.schema';
 import { IGateway } from '../interfaces/gateway.interface';
+
+export type GatewayDocument = HydratedDocument<IGateway>;
 
 const gatewaySchema = new Schema({
   serialNumber: { type: String, required: true, unique: true },

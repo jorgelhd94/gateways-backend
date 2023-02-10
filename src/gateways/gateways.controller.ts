@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { GatewaysService } from './gateways.service';
 import { CreateGatewayDto } from './dto/create-gateway.dto';
 import { UpdateGatewayDto } from './dto/update-gateway.dto';
@@ -19,16 +27,16 @@ export class GatewaysController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.gatewaysService.findOne(+id);
+    return this.gatewaysService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateGatewayDto: UpdateGatewayDto) {
-    return this.gatewaysService.update(+id, updateGatewayDto);
+    return this.gatewaysService.update(id, updateGatewayDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.gatewaysService.remove(+id);
+    return this.gatewaysService.remove(id);
   }
 }
