@@ -11,10 +11,7 @@ export class DevicesService {
     @InjectModel(Gateway.name) private GatewayModel: Model<GatewayDocument>,
   ) {}
 
-  async addDevice(
-    gatewayId: string,
-    device: CreateDeviceDto,
-  ): Promise<IGateway> {
+  async create(gatewayId: string, device: CreateDeviceDto): Promise<IGateway> {
     const gateway = await this.GatewayModel.findById(gatewayId);
 
     if (!gateway) {
@@ -29,7 +26,7 @@ export class DevicesService {
     return await gateway.save();
   }
 
-  async removeDevice(gatewayId: string, deviceId: string): Promise<IGateway> {
+  async remove(gatewayId: string, deviceId: string): Promise<IGateway> {
     const gateway = await this.GatewayModel.findById(gatewayId);
 
     if (!gateway) {

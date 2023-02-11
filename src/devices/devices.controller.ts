@@ -1,3 +1,4 @@
+import { ParseMongoIdPipe } from './../common/pipes/parse-mongo-id/parse-mongo-id.pipe';
 import {
   Controller,
   Get,
@@ -15,10 +16,13 @@ import { UpdateDeviceDto } from './dto/update-device.dto';
 export class DevicesController {
   constructor(private readonly devicesService: DevicesService) {}
 
-  // @Post()
-  // create(@Body() createDeviceDto: CreateDeviceDto) {
-  //   return this.devicesService.create(createDeviceDto);
-  // }
+  @Post(':gatewayId')
+  create(
+    @Param('gatewayId', ParseMongoIdPipe) gatewayId: string,
+    @Body() createDeviceDto: CreateDeviceDto,
+  ) {
+    return this.devicesService.create(gatewayId, createDeviceDto);
+  }
 
   // @Get()
   // findAll() {
