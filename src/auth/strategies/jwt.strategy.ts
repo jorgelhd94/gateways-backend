@@ -1,18 +1,19 @@
+import { UserDocument } from './../schemas/user.schema';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator';
 import { PassportStrategy } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 import { Strategy, ExtractJwt } from 'passport-jwt';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-
 import { IJwtPayload } from '../interfaces/jwt-payload.interface';
-import { User } from '../schemas/user.entity';
+import { IUser } from '../interfaces/IUser.interface';
+import { InjectModel } from '@nestjs/mongoose';
+import { User } from '../schemas/user.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectModel(User.name) private UserModel: Model<UserDocument>,
     private configService: ConfigService,
   ) {
     super({
@@ -21,17 +22,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: IJwtPayload): Promise<User> {
+  async validate(payload: IJwtPayload): Promise<IUser> {
     const { id } = payload;
 
-    const user = await this.userRepository.findOneBy({ id });
+    const user = await this.UserModel.findById({ id });
 
     if (!user) {
       throw new UnauthorizedException('Token no valid');
-    }
-
-    if (!user.isActive) {
-      throw new UnauthorizedException('User is inactive');
     }
 
     return user;

@@ -3,36 +3,38 @@ import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { User } from './schemas/user.entity';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { IJwtPayload } from './interfaces/jwt-payload.interface';
+import { InjectModel } from '@nestjs/mongoose';
+import { User, UserDocument } from './schemas/user.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectModel(User.name) private UserModel: Model<UserDocument>,
     private readonly jwtService: JwtService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
     try {
       const { password, ...userData } = createUserDto;
-
-      const user = this.userRepository.create({
+      const createdUser = new this.UserModel({
         ...userData,
         password: bcrypt.hashSync(password, 10),
       });
 
-      await this.userRepository.save(user);
+      await createdUser.save();
 
-      return { ...user, token: this.getJwtToken({ id: user.id }) };
+      return {
+        ...createdUser,
+        token: this.getJwtToken({ id: createdUser._id }),
+      };
     } catch (error) {
       this.handleErrors(error);
     }
@@ -41,10 +43,12 @@ export class AuthService {
   async login(loginUserDto: LoginUserDto) {
     const { email, password } = loginUserDto;
 
-    const user = await this.userRepository.findOne({
+    // return this.GatewayModel.findById(id).exec();
+
+    const user = await this.UserModel.findOne({
       where: { email },
       select: { email: true, password: true, id: true },
-    });
+    }).exec();
 
     if (!user) {
       throw new UnauthorizedException('Credentials are not valid (email)');
@@ -53,7 +57,7 @@ export class AuthService {
     if (!bcrypt.compareSync(password, user.password))
       throw new UnauthorizedException('Credentials are not valid (password)');
 
-    return { ...user, token: this.getJwtToken({ id: user.id }) };
+    return { ...user, token: this.getJwtToken({ id: user._id }) };
   }
 
   private getJwtToken(payload: IJwtPayload) {

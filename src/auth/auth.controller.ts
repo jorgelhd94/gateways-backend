@@ -12,11 +12,9 @@ import { IncomingHttpHeaders } from 'http';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { User } from './schemas/user.entity';
 import { GetUser } from './decorators/get-user.decorator';
-import { RawHeaders } from 'src/common/decorators/raw-headers.decorator';
 import { Auth } from './decorators/auth.decorator';
-import { ValidRoles } from './interfaces/valid-roles';
+import { User } from './schemas/user.schema';
 
 @Controller('auth')
 export class AuthController {
@@ -34,18 +32,7 @@ export class AuthController {
 
   @Get('private')
   @UseGuards(AuthGuard())
-  privateRouter(
-    @GetUser() user: User,
-    @GetUser('email') email: string,
-    @RawHeaders() rawHeaders: string[],
-    @Headers() headers: IncomingHttpHeaders,
-  ) {
-    return { user, email, headers, rawHeaders };
-  }
-
-  @Get('private2')
-  @Auth(ValidRoles.admin)
-  privateRouter2(@GetUser() user: User) {
-    return { user };
+  privateRouter(@GetUser() user: User, @GetUser('email') email: string) {
+    return { user, email };
   }
 }
