@@ -32,7 +32,7 @@ export class AuthService {
       await createdUser.save();
 
       return {
-        user: createdUser,
+        user: { id: createdUser._id, ...userData },
         token: this.getJwtToken({ _id: createdUser._id }),
       };
     } catch (error) {
@@ -45,10 +45,7 @@ export class AuthService {
 
     // return this.GatewayModel.findById(id).exec();
 
-    const user = await this.UserModel.findOne({
-      where: { email },
-      select: { email: true, password: true, id: true },
-    }).exec();
+    const user = await this.UserModel.findOne({ email }).exec();
 
     if (!user) {
       throw new UnauthorizedException('Credentials are not valid (email)');

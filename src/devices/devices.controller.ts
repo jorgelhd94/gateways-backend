@@ -29,23 +29,30 @@ export class DevicesController {
     return this.devicesService.create(gatewayId, createDeviceDto);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.devicesService.findAll();
-  // }
+  @Get(':gatewayId')
+  findAllByGateway(@Param('gatewayId', ParseMongoIdPipe) gatewayId: string) {
+    return this.devicesService.findAllByGateway(gatewayId);
+  }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {
   //   return this.devicesService.findOne(+id);
   // }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateDeviceDto: UpdateDeviceDto) {
-  //   return this.devicesService.update(+id, updateDeviceDto);
-  // }
+  @Patch(':gatewayId/:deviceUID')
+  update(
+    @Param('gatewayId') gatewayId: string,
+    @Param('deviceUID') deviceUID: string,
+    @Body() updateDeviceDto: UpdateDeviceDto,
+  ) {
+    return this.devicesService.update(gatewayId, +deviceUID, updateDeviceDto);
+  }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.devicesService.remove(+id);
-  // }
+  @Delete(':gatewayId/:deviceId')
+  remove(
+    @Param('gatewayId') gatewayId: string,
+    @Param('deviceId') deviceId: string,
+  ) {
+    return this.devicesService.remove(gatewayId, deviceId);
+  }
 }
