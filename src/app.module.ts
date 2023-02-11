@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CommonModule } from './common/common.module';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
+    ConfigModule.forRoot(),
     CommonModule,
     GatewaysModule,
     DevicesModule,
