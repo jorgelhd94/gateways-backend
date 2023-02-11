@@ -31,17 +31,12 @@ export class GatewaysController {
     return this.gatewaysService.findOne(id);
   }
 
-  // @Patch(':id')
-  // update(
-  //   @Param('id', ParseMongoIdPipe) id: string,
-  //   @Body() updateGatewayDto: UpdateGatewayDto,
-  // ) {
-  //   return this.gatewaysService.update(id, updateGatewayDto);
-  // }
-
-  @Get('hello/:id')
-  hello(@Param('id', ParseMongoIdPipe) id: string) {
-    return 'Hello ' + id;
+  @Patch(':id')
+  update(
+    @Param('id', ParseMongoIdPipe) id: string,
+    @Body() updateGatewayDto: UpdateGatewayDto,
+  ) {
+    return this.gatewaysService.update(id, updateGatewayDto);
   }
 
   @Delete(':id')
