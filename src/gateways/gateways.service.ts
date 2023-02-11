@@ -22,8 +22,8 @@ export class GatewaysService {
     return createdGateway.save();
   }
 
-  async findAll(): Promise<IGateway[]> {
-    return this.GatewayModel.find().exec();
+  async findAll(user: User): Promise<IGateway[]> {
+    return this.GatewayModel.find({ user }).exec();
   }
 
   async findOne(id: string): Promise<IGateway> {

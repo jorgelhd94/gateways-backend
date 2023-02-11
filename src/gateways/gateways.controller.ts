@@ -30,8 +30,8 @@ export class GatewaysController {
   }
 
   @Get()
-  findAll() {
-    return this.gatewaysService.findAll();
+  findAll(@GetUser() user: User) {
+    return this.gatewaysService.findAll(user);
   }
 
   @Get(':id')
