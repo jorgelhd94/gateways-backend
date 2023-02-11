@@ -12,13 +12,11 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://mongo:mongo@cluster0.3qsyk6t.mongodb.net/gatewaysdb',
-    ),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
     ConfigModule.forRoot(),
+    MongooseModule.forRoot(process.env.MONGODB_DEVELOP),
     CommonModule,
     AuthModule,
     GatewaysModule,
