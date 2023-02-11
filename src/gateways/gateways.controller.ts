@@ -12,15 +12,16 @@ import { GatewaysService } from './gateways.service';
 import { CreateGatewayDto } from './dto/create-gateway.dto';
 import { UpdateGatewayDto } from './dto/update-gateway.dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id/parse-mongo-id.pipe';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 
+@ApiTags('Gateways')
+@ApiBearerAuth()
 @Controller('gateways')
 export class GatewaysController {
   constructor(private readonly gatewaysService: GatewaysService) {}
 
   @Post()
-  @ApiBearerAuth()
   @Auth()
   create(@Body() createGatewayDto: CreateGatewayDto) {
     return this.gatewaysService.create(createGatewayDto);
