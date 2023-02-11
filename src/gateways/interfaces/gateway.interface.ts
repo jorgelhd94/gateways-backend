@@ -1,6 +1,6 @@
 import { IDevice } from 'src/devices/interfaces/device.interface';
 
-export interface IGateway extends Document {
+export interface IGateway {
   serialNumber: string;
   name: string;
   ipAddress: string;

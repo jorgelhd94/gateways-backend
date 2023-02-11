@@ -12,7 +12,7 @@ import { IncomingHttpHeaders } from 'http';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { User } from './entities/user.entity';
+import { User } from './schemas/user.entity';
 import { GetUser } from './decorators/get-user.decorator';
 import { RawHeaders } from 'src/common/decorators/raw-headers.decorator';
 import { Auth } from './decorators/auth.decorator';

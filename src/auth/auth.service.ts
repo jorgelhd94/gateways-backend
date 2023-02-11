@@ -10,7 +10,7 @@ import * as bcrypt from 'bcrypt';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { User } from './entities/user.entity';
+import { User } from './schemas/user.entity';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { IJwtPayload } from './interfaces/jwt-payload.interface';
 
