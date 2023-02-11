@@ -1,19 +1,25 @@
-import { HydratedDocument, Schema, model } from 'mongoose';
-import { DeviceModel } from 'src/devices/schemas/device.schema';
+import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 import { IGateway } from '../interfaces/gateway.interface';
+import { Device } from 'src/devices/schemas/device.schema';
 
 export type GatewayDocument = HydratedDocument<IGateway>;
+const ipv4Validation =
+  /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/;
 
-const gatewaySchema = new Schema({
-  serialNumber: { type: String, required: true, unique: true },
-  name: { type: String, required: true },
-  ipAddress: {
-    type: String,
-    required: true,
-    validate:
-      /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/,
-  },
-  devices: [DeviceModel.schema],
-});
+@Schema()
+export class Gateway {
+  @Prop({ required: true, unique: true })
+  serialNumber: string;
 
-export const GatewayModel = model<IGateway>('Gateway', gatewaySchema);
+  @Prop({ required: true })
+  name: string;
+
+  @Prop({ required: true, validate: ipv4Validation })
+  ipAddress: string;
+
+  @Prop([Device])
+  devices: Device[];
+}
+
+export const GatewaySchema = SchemaFactory.createForClass(Gateway);

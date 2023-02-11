@@ -1,15 +1,21 @@
+import { Model } from 'mongoose';
 import { IGateway } from 'src/gateways/interfaces/gateway.interface';
-import { GatewayModel } from './../gateways/schemas/gateway.schema';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { Injectable } from '@nestjs/common';
+import { Gateway, GatewayDocument } from 'src/gateways/schemas/gateway.schema';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class DevicesService {
+  constructor(
+    @InjectModel(Gateway.name) private GatewayModel: Model<GatewayDocument>,
+  ) {}
+
   async addDevice(
     gatewayId: string,
     device: CreateDeviceDto,
   ): Promise<IGateway> {
-    const gateway = await GatewayModel.findById(gatewayId);
+    const gateway = await this.GatewayModel.findById(gatewayId);
 
     if (!gateway) {
       throw new Error('Gateway not found');
@@ -24,7 +30,7 @@ export class DevicesService {
   }
 
   async removeDevice(gatewayId: string, deviceId: string): Promise<IGateway> {
-    const gateway = await GatewayModel.findById(gatewayId);
+    const gateway = await this.GatewayModel.findById(gatewayId);
 
     if (!gateway) {
       throw new Error('Gateway not found');

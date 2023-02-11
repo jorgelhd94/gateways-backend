@@ -1,11 +1,21 @@
-import { Schema, model } from 'mongoose';
-import { IDevice } from '../interfaces/device.interface';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
-const deviceSchema = new Schema({
-  uid: { type: Number, required: true },
-  vendor: { type: String, required: true },
-  dateCreated: { type: Date, required: true },
-  status: { type: String, required: true },
-});
+export type DeviceDocument = HydratedDocument<Device>;
 
-export const DeviceModel = model<IDevice>('Device', deviceSchema);
+@Schema()
+export class Device {
+  @Prop({ required: true })
+  uid: number;
+
+  @Prop({ required: true })
+  vendor: string;
+
+  @Prop({ required: true })
+  dateCreated: Date;
+
+  @Prop({ required: true })
+  status: string;
+}
+
+export const DeviceSchema = SchemaFactory.createForClass(Device);
