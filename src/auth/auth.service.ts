@@ -32,7 +32,7 @@ export class AuthService {
       await createdUser.save();
 
       return {
-        ...createdUser,
+        user: createdUser,
         token: this.getJwtToken({ id: createdUser._id }),
       };
     } catch (error) {
@@ -57,7 +57,7 @@ export class AuthService {
     if (!bcrypt.compareSync(password, user.password))
       throw new UnauthorizedException('Credentials are not valid (password)');
 
-    return { ...user, token: this.getJwtToken({ id: user._id }) };
+    return { user, token: this.getJwtToken({ id: user._id }) };
   }
 
   private getJwtToken(payload: IJwtPayload) {
