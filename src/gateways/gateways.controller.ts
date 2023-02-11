@@ -10,6 +10,7 @@ import {
 import { GatewaysService } from './gateways.service';
 import { CreateGatewayDto } from './dto/create-gateway.dto';
 import { UpdateGatewayDto } from './dto/update-gateway.dto';
+import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id/parse-mongo-id.pipe';
 
 @Controller('gateways')
 export class GatewaysController {
@@ -26,17 +27,20 @@ export class GatewaysController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseMongoIdPipe) id: string) {
     return this.gatewaysService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGatewayDto: UpdateGatewayDto) {
+  update(
+    @Param('id', ParseMongoIdPipe) id: string,
+    @Body() updateGatewayDto: UpdateGatewayDto,
+  ) {
     return this.gatewaysService.update(id, updateGatewayDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseMongoIdPipe) id: string) {
     return this.gatewaysService.remove(id);
   }
 }

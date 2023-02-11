@@ -1,5 +1,4 @@
-import { IsString, IsIP, IsOptional } from 'class-validator';
-import { Device } from 'src/devices/schemas/device.schema';
+import { IsString, IsIP } from 'class-validator';
 
 export class CreateGatewayDto {
   @IsString()
@@ -10,7 +9,4 @@ export class CreateGatewayDto {
 
   @IsIP(4)
   ipAddress: string;
-
-  @IsOptional()
-  devices: Device[];
 }
