@@ -17,12 +17,12 @@ import { Auth } from 'src/auth/decorators/auth.decorator';
 
 @ApiTags('Gateways')
 @ApiBearerAuth()
+@Auth()
 @Controller('gateways')
 export class GatewaysController {
   constructor(private readonly gatewaysService: GatewaysService) {}
 
   @Post()
-  @Auth()
   create(@Body() createGatewayDto: CreateGatewayDto) {
     return this.gatewaysService.create(createGatewayDto);
   }

@@ -12,9 +12,11 @@ import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Auth } from 'src/auth/decorators/auth.decorator';
 
 @ApiTags('Devices')
 @ApiBearerAuth()
+@Auth()
 @Controller('devices')
 export class DevicesController {
   constructor(private readonly devicesService: DevicesService) {}
