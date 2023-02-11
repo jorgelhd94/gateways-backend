@@ -15,7 +15,8 @@ export const GetUser = createParamDecorator((data, ctx: ExecutionContext) => {
   if (data) {
     return user[data];
   } else {
-    const { password, ...userData } = user;
+    const { _doc } = user;
+    const { password, ...userData } = _doc;
     return userData;
   }
 });

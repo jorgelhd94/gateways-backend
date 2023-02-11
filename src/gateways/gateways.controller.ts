@@ -14,6 +14,8 @@ import { UpdateGatewayDto } from './dto/update-gateway.dto';
 import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id/parse-mongo-id.pipe';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/auth/decorators/auth.decorator';
+import { GetUser } from 'src/auth/decorators/get-user.decorator';
+import { User } from 'src/auth/schemas/user.schema';
 
 @ApiTags('Gateways')
 @ApiBearerAuth()
@@ -23,8 +25,8 @@ export class GatewaysController {
   constructor(private readonly gatewaysService: GatewaysService) {}
 
   @Post()
-  create(@Body() createGatewayDto: CreateGatewayDto) {
-    return this.gatewaysService.create(createGatewayDto);
+  create(@Body() createGatewayDto: CreateGatewayDto, @GetUser() user: User) {
+    return this.gatewaysService.create(createGatewayDto, user);
   }
 
   @Get()

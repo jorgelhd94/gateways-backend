@@ -1,7 +1,8 @@
 import { Prop, SchemaFactory, Schema } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 import { IGateway } from '../interfaces/gateway.interface';
 import { Device } from 'src/devices/schemas/device.schema';
+import { User } from 'src/auth/schemas/user.schema';
 
 export type GatewayDocument = HydratedDocument<IGateway>;
 const ipv4Validation =
@@ -20,6 +21,9 @@ export class Gateway {
 
   @Prop([Device])
   devices: Device[];
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  user: User;
 }
 
 export const GatewaySchema = SchemaFactory.createForClass(Gateway);

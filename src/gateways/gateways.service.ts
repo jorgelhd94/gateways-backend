@@ -5,6 +5,7 @@ import { IGateway } from './interfaces/gateway.interface';
 import { Gateway, GatewayDocument } from './schemas/gateway.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { User } from 'src/auth/schemas/user.schema';
 
 @Injectable()
 export class GatewaysService {
@@ -12,8 +13,12 @@ export class GatewaysService {
     @InjectModel(Gateway.name) private GatewayModel: Model<GatewayDocument>,
   ) {}
 
-  async create(gateway: CreateGatewayDto): Promise<IGateway> {
-    const createdGateway = new this.GatewayModel(gateway);
+  async create(gateway: CreateGatewayDto, user: User): Promise<IGateway> {
+    const newGateway = {
+      user,
+      ...gateway,
+    };
+    const createdGateway = new this.GatewayModel(newGateway);
     return createdGateway.save();
   }
 
