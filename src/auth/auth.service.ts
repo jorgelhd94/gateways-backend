@@ -64,9 +64,8 @@ export class AuthService {
 
   private handleErrors(error: any): never {
     if (error.code === '23505') throw new BadRequestException(error.detail);
-
-    console.log(error);
-
+    if (error.code === 11000)
+      throw new BadRequestException('Email is already register');
     throw new InternalServerErrorException('Check server logs');
   }
 }
