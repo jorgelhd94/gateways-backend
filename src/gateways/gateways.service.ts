@@ -49,6 +49,7 @@ export class GatewaysService {
   }
 
   private handleErrors(error: any): never {
+    console.log(error.code);
     if (error.code === 11000)
       throw new BadRequestException('Serial number is already register');
     throw new InternalServerErrorException('Internal Server Error');
