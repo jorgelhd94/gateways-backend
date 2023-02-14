@@ -41,6 +41,14 @@ export class DevicesController {
     return this.devicesService.findAllByGateway(gatewayId);
   }
 
+  @Get(':gatewayId/:deviceId')
+  findOneByGateway(
+    @Param('gatewayId') gatewayId: string,
+    @Param('deviceId') deviceId: string,
+  ) {
+    return this.devicesService.findOneByGateway(gatewayId, deviceId);
+  }
+
   @Patch(':gatewayId/:deviceUID')
   update(
     @Param('gatewayId') gatewayId: string,

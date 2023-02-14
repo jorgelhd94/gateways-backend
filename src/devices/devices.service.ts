@@ -70,6 +70,25 @@ export class DevicesService {
     return gateway.devices;
   }
 
+  async findOneByGateway(
+    gatewayId: string,
+    deviceId: string,
+  ): Promise<IDevice> {
+    const gateway = await this.GatewayModel.findById(gatewayId);
+
+    if (!gateway) {
+      throw new NotFoundException('Gateway not found');
+    }
+
+    const device = gateway.devices.find((device) => device.id === deviceId);
+
+    if (!device) {
+      throw new NotFoundException('Device not found');
+    }
+
+    return device;
+  }
+
   async update(
     gatewayId: string,
     deviceUID: number,
