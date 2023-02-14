@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CreateGatewayDto } from './dto/create-gateway.dto';
 import { UpdateGatewayDto } from './dto/update-gateway.dto';
 import { IGateway } from './interfaces/gateway.interface';
@@ -14,12 +18,16 @@ export class GatewaysService {
   ) {}
 
   async create(gateway: CreateGatewayDto, user: User): Promise<IGateway> {
-    const newGateway = {
-      user,
-      ...gateway,
-    };
-    const createdGateway = new this.GatewayModel(newGateway);
-    return createdGateway.save();
+    try {
+      const newGateway = {
+        user,
+        ...gateway,
+      };
+      const createdGateway = new this.GatewayModel(newGateway);
+      return createdGateway.save();
+    } catch (error) {
+      this.handleErrors(error);
+    }
   }
 
   async findAll(user: User): Promise<IGateway[]> {
@@ -38,5 +46,11 @@ export class GatewaysService {
 
   async remove(id: string): Promise<IGateway> {
     return this.GatewayModel.findByIdAndRemove(id).exec();
+  }
+
+  private handleErrors(error: any): never {
+    if (error.code === 11000)
+      throw new BadRequestException('Serial number is already register');
+    throw new InternalServerErrorException('Internal Server Error');
   }
 }
