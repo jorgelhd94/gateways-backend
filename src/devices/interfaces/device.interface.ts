@@ -4,4 +4,5 @@ export interface IDevice {
   vendor: string;
   dateCreated: Date;
   status: 'online' | 'offline';
+  gatewayId?: string;
 }

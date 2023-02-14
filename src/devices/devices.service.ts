@@ -10,6 +10,7 @@ import {
 import { Gateway, GatewayDocument } from 'src/gateways/schemas/gateway.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { IDevice } from './interfaces/device.interface';
+import { User } from 'src/auth/schemas/user.schema';
 
 @Injectable()
 export class DevicesService {
@@ -42,6 +43,21 @@ export class DevicesService {
 
     gateway.devices.push(device);
     return await gateway.save();
+  }
+
+  async findAll(user: User): Promise<IDevice[]> {
+    const gateways = (await this.GatewayModel.find({
+      user,
+    }).exec()) as any;
+
+    const devicesList: IDevice[] = [];
+    gateways.map((gateway: any) => {
+      gateway.devices.map((device: any) => {
+        devicesList.push({ ...device._doc, gatewayId: gateway._id });
+      });
+    });
+
+    return devicesList;
   }
 
   async findAllByGateway(gatewayId): Promise<IDevice[]> {

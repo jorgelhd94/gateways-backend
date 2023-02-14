@@ -13,6 +13,8 @@ import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/auth/decorators/auth.decorator';
+import { User } from 'src/auth/schemas/user.schema';
+import { GetUser } from 'src/auth/decorators/get-user.decorator';
 
 @ApiTags('Devices')
 @ApiBearerAuth()
@@ -27,6 +29,11 @@ export class DevicesController {
     @Body() createDeviceDto: CreateDeviceDto,
   ) {
     return this.devicesService.create(gatewayId, createDeviceDto);
+  }
+
+  @Get()
+  findAll(@GetUser() user: User) {
+    return this.devicesService.findAll(user);
   }
 
   @Get(':gatewayId')

@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
 } from '@nestjs/common';
 import { GatewaysService } from './gateways.service';
 import { CreateGatewayDto } from './dto/create-gateway.dto';
