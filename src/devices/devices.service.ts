@@ -5,6 +5,7 @@ import { CreateDeviceDto } from './dto/create-device.dto';
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { Gateway, GatewayDocument } from 'src/gateways/schemas/gateway.schema';
@@ -41,8 +42,13 @@ export class DevicesService {
       );
     }
 
-    gateway.devices.push(device);
-    return await gateway.save();
+    try {
+      gateway.devices.push(device);
+      const newDevice = await gateway.save();
+      return newDevice;
+    } catch (error) {
+      this.handleErrors(error);
+    }
   }
 
   async findAll(user: User): Promise<IDevice[]> {
@@ -129,5 +135,11 @@ export class DevicesService {
 
     gateway.devices.splice(deviceIndex, 1);
     return await gateway.save();
+  }
+
+  private handleErrors(error: any): never {
+    if (error.code === 11000)
+      throw new BadRequestException('UID number is already register');
+    throw new InternalServerErrorException('Internal Server Error');
   }
 }
