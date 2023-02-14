@@ -24,7 +24,8 @@ export class GatewaysService {
         ...gateway,
       };
       const createdGateway = new this.GatewayModel(newGateway);
-      return createdGateway.save();
+      const result = await createdGateway.save();
+      return result;
     } catch (error) {
       this.handleErrors(error);
     }
@@ -49,7 +50,6 @@ export class GatewaysService {
   }
 
   private handleErrors(error: any): never {
-    console.log(error.code);
     if (error.code === 11000)
       throw new BadRequestException('Serial number is already register');
     throw new InternalServerErrorException('Internal Server Error');
