@@ -39,7 +39,9 @@ export class GatewaysService {
   }
 
   async findOne(id: string): Promise<IGateway> {
-    return this.GatewayModel.findById(id).exec();
+    return this.GatewayModel.findById(id)
+      .populate('devices', null, Device.name)
+      .exec();
   }
 
   async update(id: string, gateway: UpdateGatewayDto): Promise<IGateway> {

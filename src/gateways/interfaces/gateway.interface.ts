@@ -5,4 +5,5 @@ export interface IGateway {
   serialNumber: string;
   name: string;
   ipAddress: string;
+  devices: IDevice[];
 }

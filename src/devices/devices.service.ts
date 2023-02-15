@@ -59,17 +59,18 @@ export class DevicesService {
   }
 
   async findAll(user: User): Promise<IDevice[]> {
-    const gateways = (await this.GatewayModel.find({
+    const gateways = await this.GatewayModel.find({
       user,
-    }).exec()) as any;
+    })
+      .populate('devices', null, Device.name)
+      .exec();
 
-    const devicesList: IDevice[] = [];
-    gateways.map(async (gateway: any) => {
-      const devices = await this.findAllByGateway(gateway);
-      devicesList.concat(devices);
+    const devices = [];
+    gateways.map((gateway) => {
+      devices.push(...gateway.devices);
     });
 
-    return devicesList;
+    return devices;
   }
 
   async findAllByGateway(gatewayId): Promise<IDevice[]> {
