@@ -1,4 +1,11 @@
-import { IsPositive, IsNumber, IsDate, IsIn, IsString } from 'class-validator';
+import {
+  IsPositive,
+  IsNumber,
+  IsDate,
+  IsIn,
+  IsString,
+  IsOptional,
+} from 'class-validator';
 
 export class CreateDeviceDto {
   @IsNumber()
@@ -13,4 +20,8 @@ export class CreateDeviceDto {
 
   @IsIn(['online', 'offline'])
   status: 'online' | 'offline';
+
+  @IsString()
+  @IsOptional()
+  gatewayId?: string;
 }

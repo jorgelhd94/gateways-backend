@@ -92,6 +92,15 @@ export class DevicesService {
     deviceId: string,
     updateDeviceDto: UpdateDeviceDto,
   ): Promise<IDevice> {
+    if (updateDeviceDto.gatewayId !== gatewayId) {
+      await this.GatewayModel.findByIdAndUpdate(gatewayId, {
+        $pull: { devices: deviceId },
+      });
+
+      await this.GatewayModel.findByIdAndUpdate(updateDeviceDto.gatewayId, {
+        $addToSet: { devices: deviceId },
+      });
+    }
     return this.DeviceModel.findByIdAndUpdate(
       deviceId,
       { ...updateDeviceDto, gateway: gatewayId },

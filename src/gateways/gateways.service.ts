@@ -10,12 +10,13 @@ import { Gateway, GatewayDocument } from './schemas/gateway.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/auth/schemas/user.schema';
-import { Device } from 'src/devices/schemas/device.schema';
+import { Device, DeviceDocument } from 'src/devices/schemas/device.schema';
 
 @Injectable()
 export class GatewaysService {
   constructor(
     @InjectModel(Gateway.name) private GatewayModel: Model<GatewayDocument>,
+    @InjectModel(Device.name) private DeviceModel: Model<DeviceDocument>,
   ) {}
 
   async create(gateway: CreateGatewayDto, user: User): Promise<IGateway> {
@@ -57,6 +58,7 @@ export class GatewaysService {
   }
 
   async remove(id: string): Promise<IGateway> {
+    await this.DeviceModel.deleteMany({ gatewayId: id });
     return this.GatewayModel.findByIdAndRemove(id).exec();
   }
 
