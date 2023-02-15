@@ -41,7 +41,7 @@ export class DevicesController {
     return this.devicesService.findAllByGateway(gatewayId);
   }
 
-  @Get(':deviceId')
+  @Get(':gatewayId/:deviceId')
   findOneById(@Param('deviceId', ParseMongoIdPipe) deviceId: string) {
     return this.devicesService.findOneById(deviceId);
   }

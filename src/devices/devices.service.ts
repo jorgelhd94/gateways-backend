@@ -80,7 +80,7 @@ export class DevicesService {
       throw new NotFoundException('Gateway not found');
     }
 
-    return await this.DeviceModel.find({ gateway }).exec();
+    return await this.DeviceModel.find({ gatewayId }).exec();
   }
 
   async findOneById(deviceId: string): Promise<IDevice> {
