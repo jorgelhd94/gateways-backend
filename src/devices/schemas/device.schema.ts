@@ -17,6 +17,9 @@ export class Device {
 
   @Prop({ required: true })
   status: 'online' | 'offline';
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Gateway' })
+  gatewayId: Gateway;
 }
 
 export const DeviceSchema = SchemaFactory.createForClass(Device);

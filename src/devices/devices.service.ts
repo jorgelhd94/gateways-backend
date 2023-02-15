@@ -43,7 +43,7 @@ export class DevicesService {
     }
 
     try {
-      const createdDevice = new this.DeviceModel(device);
+      const createdDevice = new this.DeviceModel({ ...device, gatewayId });
       const result = await createdDevice.save();
       await this.GatewayModel.findByIdAndUpdate(
         gatewayId,
