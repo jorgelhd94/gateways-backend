@@ -13,4 +13,7 @@ export class UpdateDeviceDto {
 
   @IsIn(['online', 'offline'])
   status: 'online' | 'offline';
+
+  @IsString()
+  gatewayId: string;
 }

@@ -97,7 +97,7 @@ export class DevicesService {
 
   async update(
     gatewayId: string,
-    deviceUID: number,
+    deviceId: string,
     updateDeviceDto: UpdateDeviceDto,
   ): Promise<IGateway> {
     const gateway = await this.GatewayModel.findById(gatewayId);
@@ -106,16 +106,26 @@ export class DevicesService {
       throw new NotFoundException('Gateway not found');
     }
 
-    const deviceIndex = gateway.devices.findIndex(
-      (device) => device.uid === deviceUID,
-    );
+    if (gatewayId !== updateDeviceDto.gatewayId) {
+      await this.remove(gatewayId, deviceId);
+      const newGateway = await this.GatewayModel.findById(
+        updateDeviceDto.gatewayId,
+      );
 
-    if (deviceIndex === -1) {
-      throw new NotFoundException('Device not found');
+      const { uid, vendor, dateCreated, status } = updateDeviceDto;
+      newGateway.devices.push({ uid, vendor, dateCreated, status });
+      return await newGateway.save();
+    } else {
+      const deviceIndex = gateway.devices.findIndex(
+        (device) => device.id === deviceId,
+      );
+
+      if (deviceIndex === -1) {
+        throw new NotFoundException('Device not found');
+      }
+      gateway.devices[deviceIndex] = updateDeviceDto;
+      return await gateway.save();
     }
-
-    gateway.devices[deviceIndex] = updateDeviceDto;
-    return await gateway.save();
   }
 
   async remove(gatewayId: string, deviceId: string): Promise<IGateway> {

@@ -43,25 +43,25 @@ export class DevicesController {
 
   @Get(':gatewayId/:deviceId')
   findOneByGateway(
-    @Param('gatewayId') gatewayId: string,
-    @Param('deviceId') deviceId: string,
+    @Param('gatewayId', ParseMongoIdPipe) gatewayId: string,
+    @Param('deviceId', ParseMongoIdPipe) deviceId: string,
   ) {
     return this.devicesService.findOneByGateway(gatewayId, deviceId);
   }
 
-  @Patch(':gatewayId/:deviceUID')
+  @Patch(':gatewayId/:deviceId')
   update(
-    @Param('gatewayId') gatewayId: string,
-    @Param('deviceUID') deviceUID: string,
+    @Param('gatewayId', ParseMongoIdPipe) gatewayId: string,
+    @Param('deviceId', ParseMongoIdPipe) deviceId: string,
     @Body() updateDeviceDto: UpdateDeviceDto,
   ) {
-    return this.devicesService.update(gatewayId, +deviceUID, updateDeviceDto);
+    return this.devicesService.update(gatewayId, deviceId, updateDeviceDto);
   }
 
   @Delete(':gatewayId/:deviceId')
   remove(
-    @Param('gatewayId') gatewayId: string,
-    @Param('deviceId') deviceId: string,
+    @Param('gatewayId', ParseMongoIdPipe) gatewayId: string,
+    @Param('deviceId', ParseMongoIdPipe) deviceId: string,
   ) {
     return this.devicesService.remove(gatewayId, deviceId);
   }
