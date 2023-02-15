@@ -21,6 +21,9 @@ export class Gateway {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   user: User;
+
+  @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'Device' }])
+  devices: [Device];
 }
 
 export const GatewaySchema = SchemaFactory.createForClass(Gateway);
