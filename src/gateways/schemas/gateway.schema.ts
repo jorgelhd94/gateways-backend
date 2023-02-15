@@ -19,9 +19,6 @@ export class Gateway {
   @Prop({ required: true, validate: ipv4Validation })
   ipAddress: string;
 
-  @Prop([Device])
-  devices: Device[];
-
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   user: User;
 }

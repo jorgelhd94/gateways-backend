@@ -1,19 +1,4 @@
-import { IsPositive, IsNumber, IsDate, IsIn, IsString } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateDeviceDto } from './create-device.dto';
 
-export class UpdateDeviceDto {
-  @IsNumber()
-  @IsPositive()
-  uid: number;
-
-  @IsString()
-  vendor: string;
-
-  @IsDate()
-  dateCreated: Date;
-
-  @IsIn(['online', 'offline'])
-  status: 'online' | 'offline';
-
-  @IsString()
-  gatewayId: string;
-}
+export class UpdateDeviceDto extends PartialType(CreateDeviceDto) {}

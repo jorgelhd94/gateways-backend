@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { Gateway } from 'src/gateways/schemas/gateway.schema';
 
 export type DeviceDocument = HydratedDocument<Device>;
 
@@ -15,7 +16,10 @@ export class Device {
   dateCreated: Date;
 
   @Prop({ required: true })
-  status: string;
+  status: 'online' | 'offline';
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Gateway' })
+  gateway: Gateway;
 }
 
 export const DeviceSchema = SchemaFactory.createForClass(Device);

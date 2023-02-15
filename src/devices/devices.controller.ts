@@ -41,12 +41,9 @@ export class DevicesController {
     return this.devicesService.findAllByGateway(gatewayId);
   }
 
-  @Get(':gatewayId/:deviceId')
-  findOneByGateway(
-    @Param('gatewayId', ParseMongoIdPipe) gatewayId: string,
-    @Param('deviceId', ParseMongoIdPipe) deviceId: string,
-  ) {
-    return this.devicesService.findOneByGateway(gatewayId, deviceId);
+  @Get(':deviceId')
+  findOneById(@Param('deviceId', ParseMongoIdPipe) deviceId: string) {
+    return this.devicesService.findOneById(deviceId);
   }
 
   @Patch(':gatewayId/:deviceId')
@@ -58,11 +55,8 @@ export class DevicesController {
     return this.devicesService.update(gatewayId, deviceId, updateDeviceDto);
   }
 
-  @Delete(':gatewayId/:deviceId')
-  remove(
-    @Param('gatewayId', ParseMongoIdPipe) gatewayId: string,
-    @Param('deviceId', ParseMongoIdPipe) deviceId: string,
-  ) {
-    return this.devicesService.remove(gatewayId, deviceId);
+  @Delete(':deviceId')
+  remove(@Param('deviceId', ParseMongoIdPipe) deviceId: string) {
+    return this.devicesService.remove(deviceId);
   }
 }

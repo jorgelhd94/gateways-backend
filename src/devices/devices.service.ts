@@ -12,29 +12,29 @@ import { Gateway, GatewayDocument } from 'src/gateways/schemas/gateway.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { IDevice } from './interfaces/device.interface';
 import { User } from 'src/auth/schemas/user.schema';
+import { Device, DeviceDocument } from './schemas/device.schema';
 
 @Injectable()
 export class DevicesService {
   constructor(
     @InjectModel(Gateway.name) private GatewayModel: Model<GatewayDocument>,
+    @InjectModel(Device.name) private DeviceModel: Model<DeviceDocument>,
   ) {}
 
-  async create(gatewayId: string, device: CreateDeviceDto): Promise<IGateway> {
-    const gateway = await this.GatewayModel.findById(gatewayId);
+  async create(gatewayId: string, device: CreateDeviceDto): Promise<IDevice> {
+    const gateway = await this.GatewayModel.findById(gatewayId).exec();
 
     if (!gateway) {
       throw new NotFoundException('Gateway not found');
     }
 
-    if (gateway.devices.length >= 10) {
+    const devices = await this.findAllByGateway(gatewayId);
+    if (devices.length >= 10) {
       throw new BadRequestException(
         'Exceeded the maximum number of allowed devices',
       );
     }
-
-    const existDevice = gateway.devices.find(
-      (value) => value.uid === device.uid,
-    );
+    const existDevice = devices.find((value) => value.uid === device.uid);
 
     if (existDevice) {
       throw new BadRequestException(
@@ -43,9 +43,9 @@ export class DevicesService {
     }
 
     try {
-      gateway.devices.push(device);
-      const newDevice = await gateway.save();
-      return newDevice;
+      const createdDevice = new this.DeviceModel({ gateway, ...device });
+      const result = await createdDevice.save();
+      return result;
     } catch (error) {
       this.handleErrors(error);
     }
@@ -57,94 +57,44 @@ export class DevicesService {
     }).exec()) as any;
 
     const devicesList: IDevice[] = [];
-    gateways.map((gateway: any) => {
-      gateway.devices.map((device: any) => {
-        devicesList.push({ ...device._doc, gatewayId: gateway._id });
-      });
+    gateways.map(async (gateway: any) => {
+      const devices = await this.findAllByGateway(gateway);
+      devicesList.concat(devices);
     });
 
     return devicesList;
   }
 
   async findAllByGateway(gatewayId): Promise<IDevice[]> {
-    const gateway = await this.GatewayModel.findById(gatewayId);
+    const gateway = await this.GatewayModel.findById(gatewayId).exec();
 
     if (!gateway) {
       throw new NotFoundException('Gateway not found');
     }
 
-    return gateway.devices;
+    return await this.DeviceModel.find({ gateway }).exec();
   }
 
-  async findOneByGateway(
-    gatewayId: string,
-    deviceId: string,
-  ): Promise<IDevice> {
-    const gateway = await this.GatewayModel.findById(gatewayId);
-
-    if (!gateway) {
-      throw new NotFoundException('Gateway not found');
-    }
-
-    const device = gateway.devices.find((device) => device.id === deviceId);
-
-    if (!device) {
-      throw new NotFoundException('Device not found');
-    }
-
-    return device;
+  async findOneById(deviceId: string): Promise<IDevice> {
+    return this.DeviceModel.findById(deviceId).exec();
   }
 
   async update(
     gatewayId: string,
     deviceId: string,
     updateDeviceDto: UpdateDeviceDto,
-  ): Promise<IGateway> {
-    const gateway = await this.GatewayModel.findById(gatewayId);
-
-    if (!gateway) {
-      throw new NotFoundException('Gateway not found');
-    }
-
-    if (gatewayId !== updateDeviceDto.gatewayId) {
-      await this.remove(gatewayId, deviceId);
-      const newGateway = await this.GatewayModel.findById(
-        updateDeviceDto.gatewayId,
-      );
-
-      const { uid, vendor, dateCreated, status } = updateDeviceDto;
-      newGateway.devices.push({ uid, vendor, dateCreated, status });
-      return await newGateway.save();
-    } else {
-      const deviceIndex = gateway.devices.findIndex(
-        (device) => device.id === deviceId,
-      );
-
-      if (deviceIndex === -1) {
-        throw new NotFoundException('Device not found');
-      }
-      gateway.devices[deviceIndex] = updateDeviceDto;
-      return await gateway.save();
-    }
+  ): Promise<IDevice> {
+    return this.DeviceModel.findByIdAndUpdate(
+      deviceId,
+      { ...updateDeviceDto, gateway: gatewayId },
+      {
+        new: true,
+      },
+    ).exec();
   }
 
-  async remove(gatewayId: string, deviceId: string): Promise<IGateway> {
-    const gateway = await this.GatewayModel.findById(gatewayId);
-
-    if (!gateway) {
-      throw new NotFoundException('Gateway not found');
-    }
-
-    const deviceIndex = gateway.devices.findIndex(
-      (device) => device.id === deviceId,
-    );
-
-    if (deviceIndex === -1) {
-      throw new NotFoundException('Device not found');
-    }
-
-    gateway.devices.splice(deviceIndex, 1);
-    return await gateway.save();
+  async remove(deviceId: string): Promise<IDevice> {
+    return await this.DeviceModel.findByIdAndRemove(deviceId).exec();
   }
 
   private handleErrors(error: any): never {
