@@ -2,8 +2,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Module } from '@nestjs/common';
 import { DevicesService } from './devices.service';
 import { DevicesController } from './devices.controller';
-import { GatewaysModule } from 'src/gateways/gateways.module';
 import { Device, DeviceSchema } from './schemas/device.schema';
+import { GatewaysModule } from 'src/gateways/gateways.module';
 
 @Module({
   imports: [
@@ -12,5 +12,6 @@ import { Device, DeviceSchema } from './schemas/device.schema';
   ],
   controllers: [DevicesController],
   providers: [DevicesService],
+  exports: [DevicesService],
 })
 export class DevicesModule {}
