@@ -1,6 +1,5 @@
 import { UpdateDeviceDto } from './dto/update-device.dto';
 import { Model } from 'mongoose';
-import { IGateway } from 'src/gateways/interfaces/gateway.interface';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import {
   BadRequestException,
@@ -8,10 +7,10 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { Gateway, GatewayDocument } from 'src/gateways/schemas/gateway.schema';
+import { Gateway, GatewayDocument } from '../gateways/schemas/gateway.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { IDevice } from './interfaces/device.interface';
-import { User } from 'src/auth/schemas/user.schema';
+import { User } from '../auth/schemas/user.schema';
 import { Device, DeviceDocument } from './schemas/device.schema';
 
 @Injectable()

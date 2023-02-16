@@ -1,4 +1,4 @@
-import { IDevice } from 'src/devices/interfaces/device.interface';
+import { IDevice } from '../../devices/interfaces/device.interface';
 
 export interface IGateway {
   _id?: string;

@@ -9,8 +9,8 @@ import { IGateway } from './interfaces/gateway.interface';
 import { Gateway, GatewayDocument } from './schemas/gateway.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from 'src/auth/schemas/user.schema';
-import { Device, DeviceDocument } from 'src/devices/schemas/device.schema';
+import { User } from '../auth/schemas/user.schema';
+import { Device, DeviceDocument } from '../devices/schemas/device.schema';
 
 @Injectable()
 export class GatewaysService {

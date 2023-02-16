@@ -12,9 +12,9 @@ import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Auth } from 'src/auth/decorators/auth.decorator';
-import { User } from 'src/auth/schemas/user.schema';
-import { GetUser } from 'src/auth/decorators/get-user.decorator';
+import { Auth } from '../auth/decorators/auth.decorator';
+import { User } from '../auth/schemas/user.schema';
+import { GetUser } from '../auth/decorators/get-user.decorator';
 
 @ApiTags('Devices')
 @ApiBearerAuth()

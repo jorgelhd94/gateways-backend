@@ -1,4 +1,4 @@
-import { IGateway } from 'src/gateways/interfaces/gateway.interface';
+import { IGateway } from '../../gateways/interfaces/gateway.interface';
 
 export interface IDevice {
   id?: string;

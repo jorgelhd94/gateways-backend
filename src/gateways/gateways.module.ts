@@ -4,7 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { GatewaysService } from './gateways.service';
 import { GatewaysController } from './gateways.controller';
 import { Gateway, GatewaySchema } from './schemas/gateway.schema';
-import { DevicesModule } from 'src/devices/devices.module';
+import { DevicesModule } from '../devices/devices.module';
 
 @Module({
   imports: [
