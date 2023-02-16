@@ -43,8 +43,6 @@ export class AuthService {
   async login(loginUserDto: LoginUserDto) {
     const { email, password } = loginUserDto;
 
-    // return this.GatewayModel.findById(id).exec();
-
     const user = await this.UserModel.findOne({ email }).exec();
 
     if (!user) {
