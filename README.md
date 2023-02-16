@@ -65,6 +65,8 @@ yarn start:dev
 ```
 
 ## API Documentation
+The API is fully documented using OpenAPI. You can access the documentation by either running the application locally and visiting http://localhost:3000/api/v1/ or by visiting the temporary hosted version at https://gateways-backend-production.up.railway.app/api/v1. The documentation provides a detailed description of each endpoint, as well as information about the required parameters and expected responses.
+
 The GMS API provides the following endpoints:
 
 ### Gateways
@@ -81,6 +83,7 @@ The GMS API provides the following endpoints:
 * `GET /devices/:gatewayId/:deviceId`: Returns one device of a specified gateway.
 * `PATCH /devices/:gatewayI/:deviceId`: Updates an existing device associated with a specific gateway.
 * `DELETE /devices/:deviceId`: Deletes a device.
+
 
 ## Authentication
 The GMS API uses JSON Web Tokens (JWT) for authentication. To access any of the endpoints, you'll need to include a valid JWT in the Authorization header of your requests.
