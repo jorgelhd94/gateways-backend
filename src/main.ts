@@ -20,7 +20,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Gateways Managment System (GMS)')
-    .setDescription('The GMS API description')
+    .setDescription(
+      'The GMS API description. The goal of this API is offer a simple way to managing gateways that control multiple peripheral devices.',
+    )
     .setVersion('1.0')
     .addBearerAuth()
     .build();
