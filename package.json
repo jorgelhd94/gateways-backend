@@ -1,10 +1,10 @@
 {
   "name": "gateways-backend",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "version": "1.0.0",
+  "description": "Gateways Managment System (GMS) API. The goal of this API is offer a simple way to managing gateways that control multiple peripheral devices.",
+  "author": "Jorge Luis Hernández Dueñas",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
