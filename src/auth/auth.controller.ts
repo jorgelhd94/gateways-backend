@@ -33,6 +33,11 @@ export class AuthController {
     return this.authService.login(loginUserDto);
   }
 
+  @ApiResponse({
+    status: 201,
+    description: 'Verify user access.',
+  })
+  @ApiResponse({ status: 401, description: 'Not authorized.' })
   @Get('access')
   @Auth()
   verifyAccess() {
