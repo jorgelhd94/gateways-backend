@@ -14,7 +14,11 @@ import { AuthModule } from './auth/auth.module';
       rootPath: join(__dirname, '..', 'public'),
     }),
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGODB_PRODUCTION),
+    MongooseModule.forRoot(
+      process.env.APP_MODE === 'DEVELOP'
+        ? process.env.MONGODB_DEVELOP
+        : process.env.MONGODB_PRODUCTION,
+    ),
     CommonModule,
     AuthModule,
     GatewaysModule,
