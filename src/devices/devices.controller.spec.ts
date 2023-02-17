@@ -1,3 +1,4 @@
+import { UpdateDeviceDto } from './dto/update-device.dto';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DevicesController } from './devices.controller';
 import { DevicesService } from './devices.service';
@@ -7,6 +8,12 @@ import { IDevice } from './interfaces/device.interface';
 describe('DevicesController', () => {
   let controller: DevicesController;
   let service: DevicesService;
+
+  const mockUser = {
+    email: 'lolo@email.cu',
+    fullname: 'Lolo',
+    password: 'lolo123',
+  };
 
   const mockGateway = {
     serialNumber: '123',
@@ -23,6 +30,11 @@ describe('DevicesController', () => {
     status: 'online',
   };
 
+  const updateDeviceDto: UpdateDeviceDto = {
+    vendor: 'asd1',
+    status: 'offline',
+  };
+
   const mockDevice: IDevice = {
     id: 'other id',
     uid: 123,
@@ -32,6 +44,34 @@ describe('DevicesController', () => {
     gatewayId: mockGateway,
   };
 
+  const mockUpdatedDevice: IDevice = {
+    id: 'other id',
+    uid: 123,
+    vendor: 'asd1',
+    dateCreated: new Date('2023-12-12'),
+    status: 'offline',
+    gatewayId: mockGateway,
+  };
+
+  const mockListDevices: IDevice[] = [
+    {
+      id: 'first id',
+      uid: 123,
+      vendor: 'asd',
+      dateCreated: new Date('2023-12-12'),
+      status: 'online',
+      gatewayId: mockGateway,
+    },
+    {
+      id: 'second id',
+      uid: 456,
+      vendor: 'dsa',
+      dateCreated: new Date('2023-12-12'),
+      status: 'online',
+      gatewayId: mockGateway,
+    },
+  ];
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [DevicesController],
@@ -40,6 +80,11 @@ describe('DevicesController', () => {
           provide: DevicesService,
           useValue: {
             create: jest.fn().mockResolvedValue(createDeviceDto),
+            findAll: jest.fn().mockResolvedValue(mockListDevices),
+            findAllByGateway: jest.fn().mockResolvedValue(mockListDevices),
+            findOneById: jest.fn().mockResolvedValue(mockDevice),
+            update: jest.fn().mockResolvedValue(updateDeviceDto),
+            remove: jest.fn().mockResolvedValue(mockDevice),
           },
         },
       ],
@@ -64,35 +109,48 @@ describe('DevicesController', () => {
     });
   });
 
-  // describe('findAll()', () => {
-  //   it('should find all gateways by user', async () => {
-  //     expect(controller.findAll(mockUser)).resolves.toEqual(mockListGateways);
-  //     expect(service.findAll).toHaveBeenCalled();
-  //   });
-  // });
+  describe('findAll()', () => {
+    it('should find all devices by user', async () => {
+      expect(controller.findAll(mockUser)).resolves.toEqual(mockListDevices);
+      expect(service.findAll).toHaveBeenCalled();
+    });
+  });
 
-  // describe('findOne()', () => {
-  //   it('should find a gateway by id', async () => {
-  //     expect(controller.findOne('a id')).resolves.toEqual(mockGateway);
-  //     expect(service.findOne).toHaveBeenCalled();
-  //   });
-  // });
+  describe('findAllByGateway()', () => {
+    it('should find all devices by gateway', async () => {
+      expect(controller.findAllByGateway('a id')).resolves.toEqual(
+        mockListDevices,
+      );
+      expect(service.findAllByGateway).toHaveBeenCalled();
+    });
+  });
 
-  // describe('update()', () => {
-  //   it('should update a gateway by id', async () => {
-  //     const updateSpy = jest
-  //       .spyOn(service, 'update')
-  //       .mockResolvedValueOnce(mockUpdatedGateway);
+  describe('findOne()', () => {
+    it('should find a gateway by id', async () => {
+      expect(controller.findOneById('other id')).resolves.toEqual(mockDevice);
+      expect(service.findOneById).toHaveBeenCalled();
+    });
+  });
 
-  //     await controller.update('a id', updateGatewayDto);
-  //     expect(updateSpy).toHaveBeenCalledWith('a id', updateGatewayDto);
-  //   });
-  // });
+  describe('update()', () => {
+    it('should update a device by gateway and device ids', async () => {
+      const updateSpy = jest
+        .spyOn(service, 'update')
+        .mockResolvedValueOnce(mockUpdatedDevice);
 
-  // describe('remove()', () => {
-  //   it('should remove a gateway by id', async () => {
-  //     expect(controller.remove('a id')).resolves.toEqual(mockGateway);
-  //     expect(service.remove).toHaveBeenCalled();
-  //   });
-  // });
+      await controller.update('a id', 'other id', updateDeviceDto);
+      expect(updateSpy).toHaveBeenCalledWith(
+        'a id',
+        'other id',
+        updateDeviceDto,
+      );
+    });
+  });
+
+  describe('remove()', () => {
+    it('should remove a device by id', async () => {
+      expect(controller.remove('other id')).resolves.toEqual(mockDevice);
+      expect(service.remove).toHaveBeenCalled();
+    });
+  });
 });
