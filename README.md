@@ -67,6 +67,8 @@ yarn start:dev
 ## API Documentation
 The API is fully documented using OpenAPI. You can access the documentation by either running the application locally and visiting http://localhost:3000/api/v1/ or by visiting the temporary hosted version at https://gateways-backend-production.up.railway.app/api/v1. The documentation provides a detailed description of each endpoint, as well as information about the required parameters and expected responses.
 
+**IMPORTANT**: The API use the prefix *api/v1*
+
 The GMS API provides the following endpoints:
 
 ### Gateways
